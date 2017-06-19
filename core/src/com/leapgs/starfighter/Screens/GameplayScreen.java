@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.leapgs.starfighter.Actors.FireActor;
+import com.leapgs.starfighter.Constants.Constants;
 import com.leapgs.starfighter.MainGame;
 import com.leapgs.starfighter.Models.LevelData;
 import com.leapgs.starfighter.Models.Sector;
@@ -21,10 +22,10 @@ import java.util.Random;
 
 public class GameplayScreen extends BaseScreen {
     private int currentLevel, currentMinFireLevel,currentMaxFireLevel,maxFiresOnScreen;
-    private float currentHealth,currentMinFrequency,currentMaxFrecuency,currentSpawnTime,spawnTimer ;
+    private float currentHealth,currentMinFrequency,currentMaxFrecuency,currentSpawnTime,spawnTimer,currentPoints ;
     public boolean burnAvailable;
 
-    private Label healthLabel;
+    private Label healthLabel,pointLabel;
     private Label.LabelStyle style;
 
     private Array<Vector2> currentSectorsOnScreen;
@@ -33,6 +34,7 @@ public class GameplayScreen extends BaseScreen {
 
     public GameplayScreen(MainGame mainGame, int level) {
         super(mainGame);
+        System.out.println("CREATING LEVEL "+level);
         currentLevel = level;
 
         style = new Label.LabelStyle();
@@ -62,16 +64,24 @@ public class GameplayScreen extends BaseScreen {
         burnAvailable=true;
 
         healthLabel = new Label("",style);
-        healthLabel.setAlignment(Align.center);
-        healthLabel.setColor(Color.WHITE);
-        healthLabel.setSize(150,50);
-        healthLabel.setPosition(125,350);
+        pointLabel = new Label("",style);
 
-        stage.addActor(healthLabel);
+        addLabelToStage(healthLabel,0,350,150,50,Color.WHITE);
+        addLabelToStage(pointLabel,250,350,150,50,Color.WHITE);
+
+        currentPoints = 0;
 
         stage.setDebugAll(true);
         setUpCurrentLevel();
         setCurrentSpawnTime();
+    }
+
+    private void addLabelToStage(Label label, float x , float y , float width , float height , Color color) {
+        label.setAlignment(Align.center);
+        label.setColor(color);
+        label.setSize(width,height);
+        label.setPosition(x,y);
+        stage.addActor(label);
     }
 
     private void setCurrentSpawnTime() {
@@ -95,7 +105,8 @@ public class GameplayScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        healthLabel.setText("Current Health = "+currentHealth);
+        healthLabel.setText("Current Health = "+currentHealth+" LEVEL "+currentLevel);
+        pointLabel.setText("Your Score = "+currentPoints);
         if(currentSectorsOnScreen.size!=maxFiresOnScreen)
         {
             if(spawnTimer >= currentSpawnTime)
@@ -114,39 +125,78 @@ public class GameplayScreen extends BaseScreen {
         Sector sect;
         Random ran = new Random();
         Vector2 spawnPos = new Vector2();
-        int level;
+        int level,verticalVarianceModifier,horizontalVarianceModifier;
+
         level = ran.nextInt(currentMaxFireLevel-currentMinFireLevel+1)+currentMinFireLevel;
-        System.out.println("LOOKING FOR SECTOR");
-        do{
+        do
+        {
             sect = currentSectorList.get(ran.nextInt(currentSectorList.size));
-            System.out.println(sect.toString());
-        }while (currentSectorsOnScreen.contains(sect.sectorOrigin,false));
-        System.out.println("SECTOR FOUND");
+        }
+        while (currentSectorsOnScreen.contains(sect.sectorOrigin,false));
         currentSectorsOnScreen.add(sect.sectorOrigin);
 
-        spawnPos.x = sect.sectorOrigin.x + (sect.sectorWidth/2);
-        spawnPos.y = sect.sectorOrigin.y - (sect.sectorWidth/2);
+        verticalVarianceModifier =  assignVarianceModifier(ran);
+        horizontalVarianceModifier =  assignVarianceModifier(ran);
+
+        spawnPos.x = sect.sectorOrigin.x + (sect.sectorWidth/2) + horizontalVarianceModifier*Constants.spawnPositionVariance*sect.sectorWidth;
+        spawnPos.y = sect.sectorOrigin.y - (sect.sectorWidth/2) + verticalVarianceModifier*Constants.spawnPositionVariance*sect.sectorHeight;
 
         stage.addActor(new FireActor(this,level, sect.sectorOrigin,spawnPos));
         setCurrentSpawnTime();
         spawnTimer=0f;
     }
 
+    private int assignVarianceModifier(Random ran) {
+        if(ran.nextInt(10)%2==0)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
     public void inflictBurnDamage() {
-        currentHealth--;
+        currentHealth = currentHealth - Constants.flameDamage;
         if(currentHealth<=0)
         {
             burnAvailable=false;
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    game.goToResultsScreen(currentLevel);
+                    endGame();
                 }
             },1.0f);
         }
     }
 
+    private void endGame() {
+
+        if (scorePrefs.getFloat("highScore"+currentLevel, -1000) == -1000)
+        {
+            scorePrefs.putFloat("highScore"+currentLevel,currentPoints);
+        }
+        else
+        {
+            if(scorePrefs.getFloat("highScore"+currentLevel)<currentPoints)
+            {
+                scorePrefs.putFloat("highScore"+currentLevel,currentPoints);
+            }
+        }
+        scorePrefs.putFloat("currentScore"+currentLevel,currentPoints);
+
+
+        game.goToResultsScreen(currentLevel);
+
+    }
+
     public void notifyFlameExtinguished(Vector2 sp) {
         currentSectorsOnScreen.removeValue(sp,false);
+        addPoints();
+    }
+
+    private void addPoints() {
+        currentPoints += Constants.pointMultiplier*Constants.flamePoints;
     }
 }

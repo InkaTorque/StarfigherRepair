@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.leapgs.starfighter.Constants.Constants;
 import com.leapgs.starfighter.Screens.GameplayScreen;
 
 /**
@@ -42,11 +43,11 @@ public class FireActor extends Actor {
     private void assignBurnRate(int flameLevel) {
         switch (flameLevel)
         {
-            case 5:burnFrecuency = 1;break;
-            case 4:burnFrecuency = 3;break;
-            case 3:burnFrecuency = 4;break;
-            case 2:burnFrecuency = 5;break;
-            case 1:burnFrecuency = 6;break;
+            case 5:burnFrecuency = Constants.level5FlameBurnFrecuency;break;
+            case 4:burnFrecuency = Constants.level4FlameBurnFrecuency;break;
+            case 3:burnFrecuency = Constants.level3FlameBurnFrecuency;break;
+            case 2:burnFrecuency = Constants.level2FlameBurnFrecuency;break;
+            case 1:burnFrecuency = Constants.level1FlameBurnFrecuency;break;
         }
     }
 
@@ -68,11 +69,11 @@ public class FireActor extends Actor {
 
         switch (flameLevel)
         {
-            case 5:setSize(70.f,70.f);break;
-            case 4:setSize(60.f,60.f);break;
-            case 3:setSize(50.f,50.f);break;
-            case 2:setSize(40.f,40.f);break;
-            case 1:setSize(30.f,30.f);break;
+            case 5:setSize(Constants.level5FlameSize,Constants.level5FlameSize);break;
+            case 4:setSize(Constants.level4FlameSize,Constants.level4FlameSize);break;
+            case 3:setSize(Constants.level3FlameSize,Constants.level3FlameSize);break;
+            case 2:setSize(Constants.level2FlameSize,Constants.level2FlameSize);break;
+            case 1:setSize(Constants.level1FlameSize,Constants.level1FlameSize);break;
         }
         setPosition(sp.x - getWidth()/2,sp.y -getHeight()/2);
     }

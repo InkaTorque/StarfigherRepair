@@ -1,6 +1,7 @@
 package com.leapgs.starfighter.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -25,6 +26,7 @@ public class BaseScreen implements Screen {
     Stage stage;
 
     ScreenOverlayActor overlayActor;
+    Preferences scorePrefs;
 
     public BaseScreen(MainGame mainGame)
     {
@@ -36,6 +38,8 @@ public class BaseScreen implements Screen {
 
         if(game.testing) viewport=new FitViewport(game.window.width*1.65f, game.window.height*1.65f, camera);
         else viewport=new FitViewport(game.window.width, game.window.height, camera); //Keep Screen Size
+
+        scorePrefs = Gdx.app.getPreferences("Score");
     }
 
     @Override

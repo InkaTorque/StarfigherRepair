@@ -49,8 +49,8 @@ public class ResultsScreen extends BaseScreen {
         style.fontColor=Color.WHITE;
 
         resultMessage = new Label("LEVEL COMPLETED",style);
-        currentScoreMessage = new Label("CURRENT SCORE =",style);
-        hiScoreMessage = new Label("YOUR HIGH SCORE IS = ",style);
+        currentScoreMessage = new Label("LEVEL "+lastLevel+" SCORE = "+scorePrefs.getFloat("currentScore"+lastLevel),style);
+        hiScoreMessage = new Label("LEVEL "+lastLevel+" HIGH SCORE IS = "+scorePrefs.getFloat("highScore"+lastLevel),style);
 
         resultMessage.setAlignment(Align.center);
         currentScoreMessage.setAlignment(Align.center);
@@ -91,7 +91,9 @@ public class ResultsScreen extends BaseScreen {
             goToNextLevelButton.addListener( new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.goToGameplayLevel(lastLevel++);
+                    System.out.println("Going to Next Level");
+                    lastLevel = lastLevel+1;
+                    game.goToGameplayLevel(lastLevel);
                 }
             });
             stage.addActor(goToNextLevelButton);
