@@ -188,6 +188,7 @@ public class GameplayScreen extends BaseScreen {
 
 
         game.goToResultsScreen(currentLevel);
+        scorePrefs.flush();
 
     }
 

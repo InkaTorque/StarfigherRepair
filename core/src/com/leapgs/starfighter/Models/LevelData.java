@@ -36,8 +36,8 @@ public class LevelData {
         xArea = 400 - marginXLeft - marginXRight;
         yArea = 400 - marginYUp - marginYDown;
 
-        xStep = xArea/rows;
-        yStep = yArea/colums;
+        xStep = xArea/colums;
+        yStep = yArea/rows;
 
         xOrigin = marginXLeft;
         yOrigin = 400 - marginYUp;
