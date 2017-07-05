@@ -8,9 +8,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class LevelData {
 
-    public int minFireLevel,maxFireLevel, rows, colums;
-    public float minAppearFrecuency,maxAppearFrecuency,health, marginXLeft, marginXRight,marginYUp,marginYDown;
-    public Array<Sector> sectors;
+    private int minFireLevel,maxFireLevel, rows, colums;
+    private float minAppearFrecuency,maxAppearFrecuency,health, marginXLeft, marginXRight,marginYUp,marginYDown;
+    private Array<Sector> sectors;
 
     public LevelData(float health, int minFireLevel, int maxFireLevel, float minAppearFrecuency, float maxAppearFrecuency, int rows, int colums , float marginXL, float marginXR, float marginYU, float marginYD) {
         this.minFireLevel = minFireLevel;
@@ -28,7 +28,58 @@ public class LevelData {
         createSectorList();
     }
 
-    private void createSectorList() {
+    public LevelData() {
+    }
+
+    public int getMinFireLevel() {
+        return minFireLevel;
+    }
+
+    public int getMaxFireLevel() {
+        return maxFireLevel;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColums() {
+        return colums;
+    }
+
+    public float getMinAppearFrecuency() {
+        return minAppearFrecuency;
+    }
+
+    public float getMaxAppearFrecuency() {
+        return maxAppearFrecuency;
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public float getMarginXLeft() {
+        return marginXLeft;
+    }
+
+    public float getMarginXRight() {
+        return marginXRight;
+    }
+
+    public float getMarginYUp() {
+        return marginYUp;
+    }
+
+    public float getMarginYDown() {
+        return marginYDown;
+    }
+
+    public Array<Sector> getSectors() {
+        return sectors;
+    }
+
+    public void createSectorList() {
 
         sectors = new Array<Sector>();
         float xArea,yArea,xOrigin,yOrigin,xStep,yStep;

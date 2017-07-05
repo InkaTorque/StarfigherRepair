@@ -1,11 +1,13 @@
 package com.leapgs.starfighter.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Timer;
 import com.leapgs.starfighter.Actors.FireActor;
 import com.leapgs.starfighter.Constants.Constants;
@@ -30,7 +32,8 @@ public class GameplayScreen extends BaseScreen {
 
     private Array<Vector2> currentSectorsOnScreen;
     private Array<Sector>  currentSectorList;
-    private HashMap<Integer, LevelData> levelDataArray;
+
+    private LevelData currentLevelData;
 
     public GameplayScreen(MainGame mainGame, int level) {
         super(mainGame);
@@ -42,19 +45,17 @@ public class GameplayScreen extends BaseScreen {
         style.fontColor= Color.WHITE;
 
         currentSectorsOnScreen = new Array<Vector2>();
-        levelDataArray = new HashMap<Integer, LevelData>();
 
-        setUpLevelData();
+        setUpLevelData(currentLevel);
     }
 
-    private void setUpLevelData() {
-        new LevelData(100,1,5,0.5f,1.5f,4,3,25,30,75,0);
-        levelDataArray.put(1,new LevelData(100,1,5,2.0f,4.0f,4,3,30,30,75,170));
-        levelDataArray.put(2,new LevelData(100,1,5,0.5f,1.5f,4,3,30,30,75,170));
-        levelDataArray.put(3,new LevelData(100,1,5,0.5f,1.5f,4,3,30,30,75,170));
-        levelDataArray.put(4,new LevelData(100,1,5,0.5f,1.5f,4,3,30,30,75,170));
-        levelDataArray.put(5,new LevelData(100,1,5,0.5f,1.5f,4,3,30,30,75,170));
+    private void setUpLevelData(int currentLevel) {
+        FileHandle file = Gdx.files.local("levels/level"+currentLevel+".json");
+        String levelString = file.readString();
+        Json json = new Json();
 
+        currentLevelData = json.fromJson(LevelData.class,levelString);
+        currentLevelData.createSectorList();
     }
 
     @Override
@@ -92,12 +93,12 @@ public class GameplayScreen extends BaseScreen {
     private void setUpCurrentLevel() {
         currentSectorsOnScreen.clear();
 
-        currentMaxFireLevel = levelDataArray.get(currentLevel).maxFireLevel;
-        currentMinFireLevel = levelDataArray.get(currentLevel).minFireLevel;
-        currentMinFrequency = levelDataArray.get(currentLevel).minAppearFrecuency;
-        currentMaxFrecuency = levelDataArray.get(currentLevel).maxAppearFrecuency;
-        currentSectorList = levelDataArray.get(currentLevel).sectors;
-        currentHealth = levelDataArray.get(currentLevel).health;
+        currentMaxFireLevel = currentLevelData.getMaxFireLevel();
+        currentMinFireLevel = currentLevelData.getMinFireLevel();
+        currentMinFrequency = currentLevelData.getMinAppearFrecuency();
+        currentMaxFrecuency = currentLevelData.getMaxAppearFrecuency();
+        currentSectorList = currentLevelData.getSectors();
+        currentHealth = currentLevelData.getHealth();
         maxFiresOnScreen = currentSectorList.size;
 
     }

@@ -1,0 +1,13 @@
+{
+minFireLevel: 1
+maxFireLevel: 5
+rows: 4
+colums: 3
+minAppearFrecuency: 2
+maxAppearFrecuency: 4
+health: 100
+marginXLeft: 30
+marginXRight: 30
+marginYUp: 75
+marginYDown: 170
+}
