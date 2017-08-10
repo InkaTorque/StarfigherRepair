@@ -32,10 +32,10 @@ public class GameplayScreen extends BaseScreen {
     private float currentHealth,currentMinFrequency,currentMaxFrecuency,currentSpawnTime,spawnTimer,currentPoints ;
     public boolean burnAvailable;
 
-    private StaticImageActor background;
+    //private StaticImageActor background;
 
-    /*private TextureAtlas gameAtlas;
-    private TextureRegion background;*/
+    private TextureAtlas gameAtlas;
+    private TextureRegion background;
 
     private Label healthLabel,pointLabel;
     private Label.LabelStyle style;
@@ -50,14 +50,11 @@ public class GameplayScreen extends BaseScreen {
 
         this.mainGame = mainGame;
 
-        background = new StaticImageActor(mainGame, "bg_gameplay.png", 0, 0);
-        stage.addActor(background);
-
-        /*mainGame.assetManager.load("sprites/game.atlas", TextureAtlas.class);
+        mainGame.assetManager.load("sprites/game.atlas", TextureAtlas.class);
         mainGame.assetManager.finishLoading();
         gameAtlas=mainGame.assetManager.get("sprites/game.atlas", TextureAtlas.class);
 
-        background = gameAtlas.findRegion("bg_gameplay");*/
+        background = gameAtlas.findRegion("bg_gameplay");
 
         System.out.println("CREATING LEVEL "+level);
         currentLevel = level;
@@ -85,6 +82,9 @@ public class GameplayScreen extends BaseScreen {
         super.show();
         Gdx.input.setInputProcessor(stage);
         burnAvailable=true;
+
+        /*background = new StaticImageActor(mainGame, "bg_gameplay.png", 200, 200);
+        stage.addActor(background)*/;
 
         healthLabel = new Label("",style);
         pointLabel = new Label("",style);
