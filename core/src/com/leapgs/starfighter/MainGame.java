@@ -2,9 +2,11 @@ package com.leapgs.starfighter;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
@@ -19,18 +21,20 @@ public class MainGame extends Game {
 	public SpriteBatch batch;
 	public Rectangle window;
 
+	public AssetManager assetManager;
+
 	public BitmapFont font;
 
 	public Skin skin;
-
 
 	public boolean testing = false;
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-
 		font = new BitmapFont();
+
+		assetManager=new AssetManager();
 
 		//Game Window
 		window = new Rectangle();
@@ -53,6 +57,7 @@ public class MainGame extends Game {
 		batch.dispose();
 		font.dispose();
 		skin.dispose();
+		assetManager.dispose();
 		this.getScreen().dispose();
 	}
 

@@ -3,6 +3,8 @@ package com.leapgs.starfighter.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Timer;
 import com.leapgs.starfighter.Actors.FireActor;
+import com.leapgs.starfighter.Actors.StaticImageActor;
 import com.leapgs.starfighter.Constants.Constants;
 import com.leapgs.starfighter.MainGame;
 import com.leapgs.starfighter.Models.LevelData;
@@ -23,9 +26,16 @@ import java.util.Random;
  */
 
 public class GameplayScreen extends BaseScreen {
+    private MainGame mainGame;
+
     private int currentLevel, currentMinFireLevel,currentMaxFireLevel,maxFiresOnScreen;
     private float currentHealth,currentMinFrequency,currentMaxFrecuency,currentSpawnTime,spawnTimer,currentPoints ;
     public boolean burnAvailable;
+
+    private StaticImageActor background;
+
+    /*private TextureAtlas gameAtlas;
+    private TextureRegion background;*/
 
     private Label healthLabel,pointLabel;
     private Label.LabelStyle style;
@@ -37,6 +47,18 @@ public class GameplayScreen extends BaseScreen {
 
     public GameplayScreen(MainGame mainGame, int level) {
         super(mainGame);
+
+        this.mainGame = mainGame;
+
+        background = new StaticImageActor(mainGame, "bg_gameplay.png", 0, 0);
+        stage.addActor(background);
+
+        /*mainGame.assetManager.load("sprites/game.atlas", TextureAtlas.class);
+        mainGame.assetManager.finishLoading();
+        gameAtlas=mainGame.assetManager.get("sprites/game.atlas", TextureAtlas.class);
+
+        background = gameAtlas.findRegion("bg_gameplay");*/
+
         System.out.println("CREATING LEVEL "+level);
         currentLevel = level;
 
@@ -50,7 +72,7 @@ public class GameplayScreen extends BaseScreen {
     }
 
     private void setUpLevelData(int currentLevel) {
-        FileHandle file = Gdx.files.local("levels/level"+currentLevel+".json");
+        FileHandle file = Gdx.files.internal("levels/level"+currentLevel+".json");
         String levelString = file.readString();
         Json json = new Json();
 
@@ -108,6 +130,7 @@ public class GameplayScreen extends BaseScreen {
         super.render(delta);
         healthLabel.setText("Current Health = "+currentHealth+" LEVEL "+currentLevel);
         pointLabel.setText("Your Score = "+currentPoints);
+
         if(currentSectorsOnScreen.size!=maxFiresOnScreen)
         {
             if(spawnTimer >= currentSpawnTime)
@@ -200,5 +223,12 @@ public class GameplayScreen extends BaseScreen {
 
     private void addPoints() {
         currentPoints += Constants.pointMultiplier*Constants.flamePoints;
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
     }
 }
